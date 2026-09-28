@@ -23,27 +23,41 @@ def recall_memory(customer_id, query):
     customer_marker = f"Customer {customer_id}"
     memories = []
 
-    # First: issue-specific recall
+    print(f"DEBUG customer_id: {customer_id}")
+    print(f"DEBUG bank_id: {bank_id}")
+
+    # First recall
     result = client.recall(
         bank_id=bank_id,
         query=query
     )
 
+    print(f"DEBUG first recall count: {len(result.results)}")
+
     for memory in result.results:
+        print(f"DEBUG recalled text: {memory.text}")
+
         if customer_marker.lower() in memory.text.lower():
             memories.append(memory.text)
 
-    # Fallback: if issue-specific recall missed the customer's history,
-    # search directly for that customer's support history
+    print(f"DEBUG filtered count after first recall: {len(memories)}")
+
+    # Fallback
     if not memories:
         fallback_result = client.recall(
             bank_id=bank_id,
             query=f"Support history for Customer {customer_id}"
         )
 
+        print(f"DEBUG fallback recall count: {len(fallback_result.results)}")
+
         for memory in fallback_result.results:
+            print(f"DEBUG fallback text: {memory.text}")
+
             if customer_marker.lower() in memory.text.lower():
                 memories.append(memory.text)
+
+    print(f"DEBUG final memory count: {len(memories)}")
 
     return memories
 
