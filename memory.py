@@ -20,18 +20,30 @@ def retain_memory(content):
 
 
 def recall_memory(customer_id, query):
+    customer_marker = f"Customer {customer_id}"
+    memories = []
+
+    # First: issue-specific recall
     result = client.recall(
         bank_id=bank_id,
         query=query
     )
 
-    memories = []
-
-    customer_marker = f"Customer {customer_id}"
-
     for memory in result.results:
         if customer_marker.lower() in memory.text.lower():
             memories.append(memory.text)
+
+    # Fallback: if issue-specific recall missed the customer's history,
+    # search directly for that customer's support history
+    if not memories:
+        fallback_result = client.recall(
+            bank_id=bank_id,
+            query=f"Support history for Customer {customer_id}"
+        )
+
+        for memory in fallback_result.results:
+            if customer_marker.lower() in memory.text.lower():
+                memories.append(memory.text)
 
     return memories
 

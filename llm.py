@@ -50,6 +50,11 @@ Rules:
   in the current message or retrieved memory.
 - When product-specific instructions are unknown, ask for the platform and
   explain that you can help narrow down the appropriate support path.
+- Never invent product-specific menu names, button labels, settings paths,
+  or exact navigation steps unless they are explicitly present in the
+  retrieved memory or current customer message.
+- If a known solution worked before but the exact procedure is unknown,
+  mention the solution without inventing how to perform it.
 """
 
     user_prompt = f"""
