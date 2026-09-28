@@ -20,7 +20,7 @@ def retain_memory(content):
 
 
 def recall_memory(customer_id, query):
-    customer_marker = f"Customer {customer_id}"
+    customer_marker = customer_id.lower()
     memories = []
 
     result = client.recall(
@@ -29,7 +29,7 @@ def recall_memory(customer_id, query):
     )
 
     for memory in result.results:
-        if customer_marker.lower() in memory.text.lower():
+        if customer_marker in memory.text.lower():
             memories.append(memory.text)
 
     if not memories:
@@ -39,7 +39,7 @@ def recall_memory(customer_id, query):
         )
 
         for memory in fallback_result.results:
-            if customer_marker.lower() in memory.text.lower():
+            if customer_marker in memory.text.lower():
                 memories.append(memory.text)
 
     return memories
